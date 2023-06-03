@@ -13,7 +13,7 @@ const Home = () => {
     localStorage.setItem('sessionId', sessionId);
     router.push(
       `https://accounts.spotify.com/authorize?client_id=680c63260c134834b22df08c1823e7ec&response_type=code&redirect_uri=${
-        process.env.ENVIRONMENT === 'PRODUCTION'
+        process.env.NEXT_PUBLIC_ENVIRONMENT === 'PRODUCTION'
           ? 'https://spotifycards.vercel.app/'
           : 'http://localhost:3001/'
       }&scope=user-read-private%20user-read-email%20user-top-read&state=34fFs29kd09`
@@ -27,7 +27,7 @@ const Home = () => {
     if (accessToken && sessionId) {
       router.push(
         `https://accounts.spotify.com/authorize?client_id=680c63260c134834b22df08c1823e7ec&response_type=code&redirect_uri=${
-          process.env.ENVIRONMENT === 'PRODUCTION'
+          process.env.NEXT_PUBLIC_ENVIRONMENT === 'PRODUCTION'
             ? 'https://spotifycards.vercel.app/'
             : 'http://localhost:3001/'
         }&scope=user-read-private%20user-read-email%20user-top-read&state=34fFs29kd09`

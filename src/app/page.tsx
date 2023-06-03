@@ -33,7 +33,7 @@ const Initializing = (props: Params) => {
         grant_type: 'authorization_code',
         code: `${code}`,
         redirect_uri: `${
-          process.env.ENVIRONMENT === 'PRODUCTION'
+          process.env.NEXT_PUBLIC_ENVIRONMENT === 'PRODUCTION'
             ? 'https://spotifycards.vercel.app/'
             : 'http://localhost:3001/'
         }`,
