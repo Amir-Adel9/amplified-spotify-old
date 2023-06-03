@@ -32,7 +32,11 @@ const Initializing = (props: Params) => {
       body: new URLSearchParams({
         grant_type: 'authorization_code',
         code: `${code}`,
-        redirect_uri: 'http://localhost:3001/',
+        redirect_uri: `${
+          process.env.ENVIRONMENT === 'PRODUCTION'
+            ? 'https://spotifycards.vercel.app/'
+            : 'http://localhost:3001/'
+        }`,
       }).toString(),
     })
       .then((res) => res.json())
