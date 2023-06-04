@@ -37,27 +37,30 @@ const Home = () => {
   }, []);
 
   return (
-    <main className='relative flex min-h-screen flex-col items-center'>
-      <section className='w-full min-h-screen relative bg-red-5000 flex flex-col  justify-center items-center '>
-        <div className='absolute w-full h-full bg-secondary opacity-80 -z-10'></div>
+    <main className='relative flex min-h-screen flex-col items-center font-kanit'>
+      <section className='w-full min-h-screen relative bg-red-5000 flex flex-col justify-center items-center'>
+        <div className='absolute w-full h-full bg-secondary opacity-80 z-[-10]'></div>
         <Image
-          src={'/background.jpg'}
+          src='/background.jpg'
           alt='Background Image'
-          className='w-full h-full -z-20'
+          className='w-full h-full z-[-20]'
           layout='fill'
           objectFit='cover'
           objectPosition='center'
         />
-        <div className='flex flex-col gap-10 items-center justify-center bg- rounded w-[80%] h-[60%]'>
-          <h1 className='text-6xl font-bold text-center '>
-            Welcome to Spotify Cards home!
+        <div className='flex flex-col gap-5 items-center justify-center bg-secondary rounded-[20px] px-12 py-10 '>
+          <h1 className='text-5xl font-bold text-center leading-tight'>
+            Welcome to Amplified Spotify!
           </h1>
-
+          <h2 className='text-3xl font-bold text-center'>
+            Your all-in-one <span className='text-accent'>Spotify </span>
+            companion.
+          </h2>
           <button
-            className='w-1/3 bg-accent text-white rounded-3xl p-2'
+            className='w-full max-w-xs border border-accent bg-accent text-white rounded-md py-3 px-6 font-bold hover:bg-secondary transition-all-ease-in-out duration-300'
             onClick={createSession}
           >
-            <h2 className='font-bold'>Get Started</h2>
+            Get Started
           </button>
         </div>
       </section>
