@@ -33,7 +33,7 @@ const Initializing = (props: Params) => {
         grant_type: 'authorization_code',
         code: `${code}`,
         redirect_uri: `${
-          process.env.NEXT_PUBLIC_ENVIRONMENTc === 'PRODUCTION'
+          process.env.NEXT_PUBLIC_ENVIRONMENT === 'PRODUCTION'
             ? 'https://spotifycards.vercel.app/'
             : 'http://localhost:3001/'
         }`,
@@ -73,7 +73,7 @@ const Initializing = (props: Params) => {
   const getMeData = async (accessToken: string) => {
     console.log('accessToken', accessToken);
     const res = await fetch(
-      'https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=30',
+      'https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=30',
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
