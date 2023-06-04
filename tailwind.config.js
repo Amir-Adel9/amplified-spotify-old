@@ -7,6 +7,16 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        primary: 'var(--color-primary)',
+        secondary: 'var(--color-secondary)',
+        accent: 'var(--color-accent)',
+        text: 'var(--color-text)',
+      },
+      fontFamily: {
+        kanit: ['var(--font-kanit)'],
+        ess: ['var(--font-roboto-mono)'],
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
@@ -15,4 +25,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
+};

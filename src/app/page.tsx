@@ -33,7 +33,7 @@ const Initializing = (props: Params) => {
         grant_type: 'authorization_code',
         code: `${code}`,
         redirect_uri: `${
-          process.env.NEXT_PUBLIC_ENVIRONMENT === 'PRODUCTION'
+          process.env.NEXT_PUBLIC_ENVIRONMENTc === 'PRODUCTION'
             ? 'https://spotifycards.vercel.app/'
             : 'http://localhost:3001/'
         }`,
@@ -45,7 +45,7 @@ const Initializing = (props: Params) => {
           console.log('errored', data);
           if (data.error_description === 'Invalid authorization code') {
             console.log('errored');
-            router.push('/home');
+            router.push('/getting_started');
           }
         } else {
           console.log('data', data);
@@ -63,7 +63,7 @@ const Initializing = (props: Params) => {
           err.error_description === 'Invalid authorization code'
         ) {
           console.log('errored');
-          router.push('/home');
+          router.push('/getting_started');
         }
         console.log(err);
       });
@@ -100,7 +100,7 @@ const Initializing = (props: Params) => {
 
     if (!code || !sessionId) {
       setIsAuthorized(false);
-      router.push('/home');
+      router.push('/getting_started');
     } else {
       setIsAuthorized(true);
     }
@@ -126,7 +126,7 @@ const Initializing = (props: Params) => {
             err.error_description === 'Invalid authorization code'
           ) {
             console.log('errored');
-            router.push('/home');
+            router.push('/getting_started');
           }
           console.log(err);
         });
@@ -145,7 +145,7 @@ const Initializing = (props: Params) => {
               <h2>Start</h2>
             </Link>
           </button> */}
-          <div className='flex justify-center items-center flex-col gap-3 bg-[#ffffff] border border-black'>
+          <div className='flex justify-center items-center flex-col gap-3  border border-accent border-y-0'>
             {meData.map((item: any) => {
               return (
                 <div
