@@ -34,7 +34,7 @@ const Initializing = (props: Params) => {
         code: `${code}`,
         redirect_uri: `${
           process.env.NEXT_PUBLIC_ENVIRONMENT === 'PRODUCTION'
-            ? 'https://spotifycards.vercel.app/'
+            ? 'https://amplified-spotify.vercel.app/'
             : 'http://localhost:3001/'
         }`,
       }).toString(),
