@@ -15,7 +15,6 @@ module.exports = {
       },
       fontFamily: {
         kanit: ['var(--font-kanit)'],
-        ess: ['var(--font-roboto-mono)'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
