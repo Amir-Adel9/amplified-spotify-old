@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 type Params = {
   searchParams: {
@@ -10,13 +11,71 @@ type Params = {
   };
 };
 
+type TrackData = {
+  id: string;
+  name: string;
+  artists: {
+    id: string;
+    name: string;
+    href: string;
+  }[];
+  album: {
+    id: string;
+    name: string;
+    album_type: string;
+    artists: {
+      id: string;
+      name: string;
+      href: string;
+    }[];
+    images: {
+      url: string;
+      width: number;
+      height: number;
+    }[];
+    preview: string;
+  };
+  available_markets: string[];
+  duration_ms: number;
+  explicit: boolean;
+  href: string;
+  is_local: boolean;
+  popularity: number;
+  preview_url: string;
+  track_number: number;
+  type: string;
+};
+
+type UserData = {
+  id: string;
+  display_name: string;
+  email: string;
+  external_urls: {
+    spotify: string;
+  };
+  followers: {
+    href: string;
+    total: number;
+  };
+  href: string;
+  images: {
+    url: string;
+    width: number;
+    height: number;
+  }[];
+  product: string;
+  type: string;
+  uri: string;
+  topTracks: TrackData[];
+};
+
 const Initializing = (props: Params) => {
   const { code } = props.searchParams;
 
   const router = useRouter();
 
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const [meData, setMeData] = useState([]);
+  const [userData, setUserData] = useState<UserData | undefined>();
 
   async function getAccessToken(code: string) {
     const res = await fetch('https://accounts.spotify.com/api/token', {
@@ -48,7 +107,6 @@ const Initializing = (props: Params) => {
             router.push('/getting_started');
           }
         } else {
-          console.log('data', data);
           localStorage.setItem(
             'accessToken',
             JSON.stringify(data.access_token)
@@ -70,9 +128,18 @@ const Initializing = (props: Params) => {
     return res;
   }
 
-  const getMeData = async (accessToken: string) => {
-    console.log('accessToken', accessToken);
-    const res = await fetch(
+  const getUserData = async (accessToken: string) => {
+    const info = await fetch('https://api.spotify.com/v1/me', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('data', data);
+        return data;
+      });
+    const topTracks = await fetch(
       'https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=30',
       {
         headers: {
@@ -82,17 +149,29 @@ const Initializing = (props: Params) => {
     )
       .then((res) => res.json())
       .then((data) => {
-        return data.items.map((item: any) => ({
+        console.log('data', data);
+        return data.items.map((item: TrackData) => ({
           id: item.id,
           name: item.name,
-          artist: item.artists[0].name,
-          image: item.album.images[0].url,
-          preview: item.preview_url,
-          albumName: item.album.name,
+          artists: item.artists,
+          album: item.album,
+          preview_url: item.preview_url,
         }));
       });
 
-    return res;
+    return {
+      id: info.id,
+      display_name: info.display_name,
+      email: info.email,
+      external_urls: info.external_urls,
+      followers: info.followers,
+      href: info.href,
+      images: info.images,
+      product: info.product,
+      type: info.type,
+      uri: info.uri,
+      topTracks: topTracks,
+    } as UserData;
   };
 
   useEffect(() => {
@@ -111,12 +190,11 @@ const Initializing = (props: Params) => {
       getAccessToken(code)
         .then((token) => {
           if (!token) {
-            console.log('errored');
+            console.log('no token');
             return;
           }
-          getMeData(token).then((res) => {
-            console.log('data', res);
-            setMeData(res);
+          getUserData(token).then((res) => {
+            setUserData(res);
           });
         })
         .catch((err) => {
@@ -133,47 +211,71 @@ const Initializing = (props: Params) => {
     }
   }, [isAuthorized]);
 
+  useEffect(() => {
+    console.log('userData', userData);
+  }, [userData]);
+
   return (
-    <div className='w-full min-h-screen flex justify-center items-center'>
+    <main className='w-full min-h-screen flex flex-col justify-center items-center'>
       {isAuthorized ? (
-        <div className='flex flex-col justify-center items-center'>
-          {/* <h1>Your Spotify account has been successfully integrated</h1>
-          <h2>Now you can create your own Spotify Cards</h2>
-          <h3>Click on the button below to start</h3>
-          <button className='w-1/3 bg-black text-white rounded p-2'>
-            <Link href='/profile'>
-              <h2>Start</h2>
-            </Link>
-          </button> */}
-          <div className='flex justify-center items-center flex-col gap-3  border border-accent border-y-0'>
-            {meData.map((item: any) => {
-              return (
-                <div
-                  key={item.id}
-                  className='flex justify-center items-center flex-col'
-                >
-                  <img
-                    className='rounded-lg w-1/2'
-                    src={item.image}
-                    alt={item.name}
-                  />
-                  <h1 className='text-center'>{item.name}</h1>
-                  <h2 className='text-center'>{item.artist}</h2>
-                  <h3 className='text-center'>{item.albumName}</h3>
-                  <audio
-                    className='mt-2 fill-black'
-                    controls
-                    src={`${item.preview}`}
-                  ></audio>
-                </div>
-              );
-            })}
+        <>
+          <div className='flex flex-col justify-center items-center'>
+            <div></div>
+            <h1 className='text-3xl font-bold'>Profile</h1>
+            <div className='flex justify-center items-center flex-col'></div>
+            <Image
+              className='rounded-full'
+              src={userData?.images[0].url as string}
+              alt={userData?.display_name as string}
+              width={128}
+              height={128}
+            />
+            <h1 className='text-center'>{userData?.display_name}</h1>
+            {/* <h2 className='text-center'>{userData?.email}</h2> */}
+            <h3 className='text-center'>{userData?.product}</h3>
           </div>
-        </div>
+          <div className='w-full flex flex-col justify-center items-center'>
+            <h1 className='text-3xl font-bold'>Top Tracks</h1>
+            <div
+              className='flex gap-3 overflow-x-scroll w-[80%] border-accent border-2 border-x-0 '
+              style={{
+                scrollBehavior: 'smooth',
+                scrollSnapType: 'x mandatory',
+                scrollSnapAlign: 'start',
+                scrollPadding: '0 10px',
+              }}
+            >
+              {userData?.topTracks.map((track) => {
+                return (
+                  <div
+                    key={track.id}
+                    className='flex justify-center items-center flex-col'
+                  >
+                    <Image
+                      className='rounded-lg w-1/2'
+                      src={track.album.images[0].url}
+                      alt={track.name}
+                      width={track.album.images[0].width * 2}
+                      height={track.album.images[0].height * 2}
+                    />
+                    <h2 className='text-center'>{track.artists[0].name}</h2>
+                    <h1 className='text-center'>{track.name}</h1>
+                    <h3 className='text-center'>{track.album.name}</h3>
+                    <audio
+                      className='mt-2 fill-black'
+                      controls
+                      src={`${track.preview_url}`}
+                    ></audio>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </>
       ) : (
         <h1>Redirecting...</h1>
       )}
-    </div>
+    </main>
   );
 };
 export default Initializing;
