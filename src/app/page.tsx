@@ -140,7 +140,7 @@ const Initializing = (props: Params) => {
         return data;
       });
     const topTracks = await fetch(
-      'https://api.spotify.com/v1/me/top/tracks?time_range=long_term&limit=30',
+      'https://api.spotify.com/v1/me/top/tracks?time_range=medium_term&limit=30',
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
